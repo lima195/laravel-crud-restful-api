@@ -1,0 +1,16 @@
+{
+    "name": "Pessoa",
+    "alias": "pessoa",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Pessoa\\Providers\\PessoaServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

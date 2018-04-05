@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/pessoa",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Pessoa\\Providers\\PessoaServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Pessoa\\": ""
+        }
+    }
+}
