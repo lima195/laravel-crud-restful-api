@@ -1,0 +1,16 @@
+{
+    "name": "PedidoDeVenda",
+    "alias": "pedidodevenda",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\PedidoDeVenda\\Providers\\PedidoDeVendaServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}
