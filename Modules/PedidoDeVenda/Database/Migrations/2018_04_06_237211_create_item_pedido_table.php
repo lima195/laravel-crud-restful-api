@@ -21,7 +21,9 @@ class CreateItemPedidoTable extends Migration
             $table->double('preco_unitario', 8, 2);
             $table->double('percentual_de_desconto', 8, 2);
             $table->double('total', 8, 2);
+            $table->unsignedInteger('numero_id');
             $table->foreign('produto')->references('id')->on('produtos');
+            $table->foreign('numero_id')->references('numero')->on('pedido_de_venda');
 
             // $table->timestamps();
         });

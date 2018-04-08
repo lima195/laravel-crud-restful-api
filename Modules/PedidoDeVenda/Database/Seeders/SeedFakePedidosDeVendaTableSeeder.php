@@ -20,10 +20,10 @@ class SeedFakePedidosDeVendaTableSeeder extends Seeder
 
         DB::table('pedido_de_venda')->insert([
           'id' => 1,
-          'cliente' => 2,
+          'cliente' => 1,
           'numero' => null,
           'emissao' => '2018-02-07',
-          'total' => (rand(50,200) / 10),
+          'total' => 25.00,
         ]);
 
         DB::table('pedido_de_venda')->insert([
@@ -31,7 +31,7 @@ class SeedFakePedidosDeVendaTableSeeder extends Seeder
           'cliente' => 2,
           'numero' => null,
           'emissao' => '2018-03-07',
-          'total' => (rand(50,200) / 10),
+          'total' => 30.00,
         ]);
 
         DB::table('pedido_de_venda')->insert([
@@ -39,7 +39,7 @@ class SeedFakePedidosDeVendaTableSeeder extends Seeder
           'cliente' => 3,
           'numero' => null,
           'emissao' => '2018-04-07',
-          'total' => (rand(50,200) / 10),
+          'total' => 30.00,
         ]);
 
         DB::table('pedido_de_venda')->insert([
@@ -47,7 +47,7 @@ class SeedFakePedidosDeVendaTableSeeder extends Seeder
           'cliente' => 4,
           'numero' => null,
           'emissao' => '2018-04-07',
-          'total' => (rand(50,200) / 10),
+          'total' => 60.00,
         ]);
     }
 }

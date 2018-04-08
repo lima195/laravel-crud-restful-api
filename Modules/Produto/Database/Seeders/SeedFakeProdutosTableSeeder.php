@@ -21,31 +21,31 @@ class SeedFakeProdutosTableSeeder extends Seeder
         DB::table('produtos')->insert([
           'codigo' => rand(1000000,8000000),
           'nome' => 'Donut de Chocolate',
-          'preco' => (rand(50,200) / 10),
+          'preco' => 10.00,
         ]);
 
         DB::table('produtos')->insert([
           'codigo' => rand(1000000,8000000),
           'nome' => 'Donut de Creme',
-          'preco' => (rand(50,200) / 10),
+          'preco' => 20.00,
         ]);
 
         DB::table('produtos')->insert([
           'codigo' => rand(1000000,8000000),
           'nome' => 'Donut de Morango',
-          'preco' => (rand(50,200) / 10),
+          'preco' => 30.00,
         ]);
 
         DB::table('produtos')->insert([
           'codigo' => rand(1000000,8000000),
           'nome' => 'Donut de Brigadeiro',
-          'preco' => (rand(50,200) / 10),
+          'preco' => 40.00,
         ]);
 
         DB::table('produtos')->insert([
           'codigo' => rand(1000000,8000000),
           'nome' => 'Donut de Churros',
-          'preco' => (rand(50,200) / 10),
+          'preco' => 50.00,
         ]);
 
         // $this->call("OthersTableSeeder");

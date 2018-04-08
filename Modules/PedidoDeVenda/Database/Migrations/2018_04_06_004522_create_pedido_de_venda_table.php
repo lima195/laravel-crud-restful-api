@@ -15,12 +15,13 @@ class CreatePedidoDeVendaTable extends Migration
     {
         Schema::create('pedido_de_venda', function (Blueprint $table) {
 
+            $table->increments('numero')->unique();
             $table->uuid('id')->unique();
             $table->unsignedInteger('cliente');
-            $table->integer('numero')->autoIncrement()->unique();
             $table->date('emissao');
             $table->double('total', 8, 2);
             $table->foreign('cliente')->references('id')->on('pessoas');
+
 
             // $table->timestamps();
         });

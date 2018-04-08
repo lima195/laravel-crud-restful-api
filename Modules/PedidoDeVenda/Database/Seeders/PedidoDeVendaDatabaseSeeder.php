@@ -16,7 +16,7 @@ class PedidoDeVendaDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
         $this->call("Modules\PedidoDeVenda\Database\Seeders\SeedFakePedidosDeVendaTableSeeder");
+        $this->call("Modules\PedidoDeVenda\Database\Seeders\SeedFakeItemPedidoTableSeeder");
     }
 }
