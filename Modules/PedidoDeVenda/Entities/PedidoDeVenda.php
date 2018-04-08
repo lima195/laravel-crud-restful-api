@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PedidoDeVenda extends Model
 {
-    protected $fillable = [];
+    protected $table = 'pedido_de_venda';
+		protected $guarded = ['id'];
+    protected $fillable = ['id', 'cliente', 'numero', 'emissao', 'total'];
 }
