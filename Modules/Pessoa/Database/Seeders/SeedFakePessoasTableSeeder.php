@@ -5,7 +5,7 @@ namespace Modules\Pessoa\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Modules\Regiao\Entities\Pessoa as Pessoa;
+use Modules\Pessoa\Entities\Pessoa as Pessoa;
 
 class SeedFakePessoasTableSeeder extends Seeder
 {

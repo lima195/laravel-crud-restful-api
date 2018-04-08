@@ -5,7 +5,7 @@ namespace Modules\Produto\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Modules\Regiao\Entities\Produto as Produto;
+use Modules\Produto\Entities\Produto as Produto;
 
 class SeedFakeProdutosTableSeeder extends Seeder
 {
