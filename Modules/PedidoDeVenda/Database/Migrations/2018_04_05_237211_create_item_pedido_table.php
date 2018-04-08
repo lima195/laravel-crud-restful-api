@@ -14,7 +14,7 @@ class CreateItemPedidoTable extends Migration
     public function up()
     {
         Schema::create('item_pedido', function (Blueprint $table) {
-            
+
             $table->increments('id');
             $table->unsignedInteger('produto');
             $table->double('quantidade', 8, 2);
@@ -22,7 +22,7 @@ class CreateItemPedidoTable extends Migration
             $table->double('percentual_de_desconto', 8, 2);
             $table->double('total', 8, 2);
             $table->foreign('produto')->references('id')->on('produtos');
-            
+
             // $table->timestamps();
         });
     }
