@@ -5,6 +5,7 @@ namespace Modules\Produto\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Produto\Entities\Produto;
 
 class ProdutoController extends Controller
 {
@@ -14,7 +15,8 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        return view('produto::index');
+        $produtos = Produto::all();
+        return response()->json($produtos);
     }
 
     /**

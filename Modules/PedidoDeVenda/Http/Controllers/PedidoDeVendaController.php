@@ -5,6 +5,7 @@ namespace Modules\PedidoDeVenda\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\PedidoDeVenda\Entities\PedidoDeVenda;
 
 class PedidoDeVendaController extends Controller
 {
@@ -14,7 +15,9 @@ class PedidoDeVendaController extends Controller
      */
     public function index()
     {
-        return view('pedidodevenda::index');
+        // return view('pedidodevenda::index');
+        $pedidos = PedidoDeVenda::all();
+        return response()->json($pedidos);
     }
 
     /**
