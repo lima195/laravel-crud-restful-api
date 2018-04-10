@@ -21,14 +21,10 @@ class PedidoDeVendaController extends Controller
      */
     public function index()
     {
-        // return view('pedidodevenda::index');
         $pedidos = DB::table('pedido_de_venda')
             ->join('pessoas', 'cliente', '=', 'pessoas.id')
             ->select('pessoas.nome as nome', 'pedido_de_venda.numero', 'pedido_de_venda.id as id', 'pedido_de_venda.emissao', 'pedido_de_venda.total')
             ->get();
-
-
-        $pedidos_list = array();
 
         foreach ($pedidos as $key => $pedido) {
           $pedidos[$key]->emissao = \Carbon\Carbon::parse($pedido->emissao)->format('d/m/Y');
@@ -187,20 +183,14 @@ class PedidoDeVendaController extends Controller
     public function destroy($id)
     {
       $pedido = PedidoDeVenda::where('numero', $id)->first();
-      // $pedido->produtos->delete();
-
-      
 
       if($pedido){
 
         foreach ($pedido->produtos as $key => $produto) {
           $produto->delete();
         }
-
         
         return response()->json($pedido->delete());
-      }else{
-
       }
     }
 }

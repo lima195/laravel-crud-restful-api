@@ -1,6 +1,7 @@
 
 $(document).ready(function() {
   // $('input, textarea').characterCounter();
+  //Materialize.updateTextFields();
 
 });
 
@@ -54,7 +55,7 @@ function getRegistros(type){
       }else if(type == "pessoa"){
 
         for(let i = 0; i < data.length; i++){
-          let id = data[i].numero;
+          let id = data[i].id;
           console.log(id);
           Html += '<tr id="pessoa_'+id+'">';
           Html +=   '<td>'+data[i].nome+'</td>';
@@ -70,13 +71,12 @@ function getRegistros(type){
       }else if(type == "produto"){
 
         for(let i = 0; i < data.length; i++){
-          let id = data[i].numero;
+          let id = data[i].id;
           console.log(id);
           Html += '<tr id="produto_'+id+'">';
-          Html +=   '<td>'+data[i].numero+'</td>';
+          Html +=   '<td>'+data[i].codigo+'</td>';
           Html +=   '<td>'+data[i].nome+'</td>';
-          Html +=   '<td>'+data[i].emissao+'</td>';
-          Html +=   '<td>'+numberToCurrency(data[i].total)+'</td>';
+          Html +=   '<td>'+numberToCurrency(data[i].preco)+'</td>';
           Html +=   '<td>'+ '<a href="produto.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
                             '<a href="produtos-form.php?id='+id+'" class="waves-effect waves-light btn-small">Editar</a> '+
                             '<a data-type="produto" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
@@ -135,9 +135,6 @@ function destroyThis(element){
     type: 'DELETE',
     url: url,
     dataType:'json',
-    data: {
-      params: null,
-    },
     success: function(data){
       console.log(data);
       $(element_delete).html("");
@@ -149,6 +146,56 @@ function destroyThis(element){
       }
     }
   });
+}
+
+function populateForm(id, type){
+  if(id == null){
+    $('#msg').html("<h4>Não foi encontrado o pedido</h4>")
+  }
+
+  let url = "";
+
+  if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
+    // Não edita
+  }else if(type == 'pessoaView' | type == 'pessoa'){
+    url = 'http://lima/pessoa/api/pessoas/'+id;
+  }else if(type == 'produtoView' | type == 'produto'){
+    url = 'http://lima/produto/api/produtos/'+id;
+  }
+
+  $.ajax({
+   type: 'GET',
+   url: url,
+   dataType:'json',
+   
+  success: function(data){
+
+    console.log(data);
+    let Html = '';
+
+      if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
+       
+        // Não edita
+
+      }else if(type == 'pessoaView' | type == 'pessoa'){
+        
+        $('input[name="id"]').val(data.id);
+        $('input[name="nome"]').val(data.nome);
+        $('input[name="cpf"]').val(data.cpf);
+        $('input[name="nascimento"]').val(data.nascimento);
+        //$('#populate-pessoa-pedidos').html(Html);
+
+      }else if(type == 'produtoView' | type == 'produto'){
+        
+        $('input[name="id"]').val(data.id);
+        $('input[name="codigo"]').val(data.codigo);
+        $('input[name="nome"]').val(data.nome);
+        $('input[name="preco"]').val(data.preco);
+
+      }
+    }
+  });
+
 }
 
 function getRegistro(id = null, type){
@@ -172,9 +219,7 @@ function getRegistro(id = null, type){
    type: 'GET',
    url: url,
    dataType:'json',
-   data: {
-    params: null,
-  },
+   
   success: function(data){
 
     console.log(data);
@@ -217,7 +262,7 @@ function getRegistro(id = null, type){
         
         $('#populate-produto').html(Html);
         $('#populate-produto-codigo').html('<span>Código: </span>'+data.codigo);
-        $('#populate-produto-nome').html('<span>Nome: </span>'+numberToCurrency(data.nome));
+        $('#populate-produto-nome').html('<span>Nome: </span>'+data.nome);
         $('#populate-produto-preco').html('<span>Preço: </span>'+numberToCurrency(data.preco));
 
       }
@@ -284,6 +329,96 @@ $("#pedido_de_venda").submit(function(e) {
     success: function(data)
     {
       M.toast({html: 'Pedido de Venda Realizado'})
+      M.toast({html: "Redirecionando..."});
+      setTimeout(function(){ window.location.replace('pedidos.php' ); }, 3000);
+    }
+  });
+
+    e.preventDefault();
+});
+
+$("#pessoa").submit(function(e) {
+
+  let url = "http://lima/pessoa/api/pessoas"; // the script where you handle the form input.
+  let data =  $("#pessoa").serialize();
+  console.log(data);
+
+  $.ajax({
+    type: 'POST',
+    url: url,
+    data: data,
+    success: function(data)
+    {
+      M.toast({html: 'Cadastro de Pessoa Realizado'})
+      M.toast({html: "Redirecionando..."});
+      setTimeout(function(){ window.location.replace('pessoas.php'); }, 3000);
+    }
+  });
+
+    e.preventDefault();
+});
+
+$("#pessoaEdit").submit(function(e) {
+
+  let id = $('input[name="id"]').val();
+  console.log(id);
+  let url = "http://lima/pessoa/api/pessoas/"+id; // the script where you handle the form input.
+  let data =  $("#pessoaEdit").serialize();
+  console.log(data);
+
+  $.ajax({
+    type: 'PUT',
+    url: url,
+    data: data,
+    success: function(data)
+    {
+      M.toast({html: 'Pessoa atualizada com sucesso'})
+      M.toast({html: "Redirecionando..."});
+      setTimeout(function(){ window.location.replace('pessoas.php'); }, 3000);
+    }
+  });
+
+    e.preventDefault();
+});
+
+$("#produto").submit(function(e) {
+
+  let url = "http://lima/produto/api/produtos"; // the script where you handle the form input.
+  let data =  $("#produto").serialize();
+  console.log(data);
+
+  $.ajax({
+    type: 'POST',
+    url: url,
+    data: data,
+    success: function(data)
+    {
+      M.toast({html: 'Cadastro de Pessoa Realizado'})
+      M.toast({html: "Redirecionando..."});
+      setTimeout(function(){ window.location.replace('produtos.php'); }, 3000);
+    }
+  });
+
+    e.preventDefault();
+});
+
+$("#produtoEdit").submit(function(e) {
+
+  let id = $('input[name="id"]').val();
+  console.log(id);
+  let url = "http://lima/produto/api/produtos/"+id; // the script where you handle the form input.
+  let data =  $("#produtoEdit").serialize();
+  console.log(data);
+
+  $.ajax({
+    type: 'PUT',
+    url: url,
+    data: data,
+    success: function(data)
+    {
+      M.toast({html: 'Pessoa atualizada com sucesso'})
+      M.toast({html: "Redirecionando..."});
+      setTimeout(function(){ window.location.replace('produtos.php'); }, 3000);
     }
   });
 
