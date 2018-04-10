@@ -22,9 +22,9 @@
           <div class="container">
             <!-- <a href="#" class="brand-logo right">Logo</a> -->
             <ul id="nav-mobile" class="left hide-on-med-and-down">
-              <li><a href="sass.html">Pedidos</a></li>
-              <li><a href="badges.html">Pessoas</a></li>
-              <li><a href="collapsible.html">Produtos</a></li>
+              <li><a href="pedidos.php">Pedidos</a></li>
+              <li><a href="pessoas.php">Pessoas</a></li>
+              <li><a href="produtos.php">Produtos</a></li>
             </ul>
         </div>
         </div>
@@ -35,7 +35,7 @@
       <h2> Pedidos de Venda - Formulário</h2>
 
       <!-- <a href="pedidos-form.php" class="waves-effect waves-light btn-small" style="float: right;">Adicionar</a> -->
-      <form action="http://lima/pedidodevenda/api/pedidos" method="post">
+      <form id="pedido_de_venda">
       <div class="row">
           <div class="col s12">
             <div class="row">

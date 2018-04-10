@@ -8,9 +8,13 @@ use Illuminate\Routing\Controller;
 use Modules\PedidoDeVenda\Entities\PedidoDeVenda;
 use Modules\PedidoDeVenda\Entities\ItemPedido;
 use Modules\Produto\Entities\Produto;
+use Modules\Pessoa\Entities\Pessoa;
+use Illuminate\Support\Facades\DB;
 
 class PedidoDeVendaController extends Controller
 {
+
+    
     /**
      * Display a listing of the resource.
      * @return Response
@@ -18,7 +22,18 @@ class PedidoDeVendaController extends Controller
     public function index()
     {
         // return view('pedidodevenda::index');
-        $pedidos = PedidoDeVenda::all();
+        $pedidos = DB::table('pedido_de_venda')
+            ->join('pessoas', 'cliente', '=', 'pessoas.id')
+            ->select('pessoas.nome as nome', 'pedido_de_venda.numero', 'pedido_de_venda.id as id', 'pedido_de_venda.emissao', 'pedido_de_venda.total')
+            ->get();
+
+
+        $pedidos_list = array();
+
+        foreach ($pedidos as $key => $pedido) {
+          $pedidos[$key]->emissao = \Carbon\Carbon::parse($pedido->emissao)->format('d/m/Y');
+        }
+
         return response()->json($pedidos);
     }
 
@@ -38,6 +53,7 @@ class PedidoDeVendaController extends Controller
      */
     public function store(Request $request)
     {
+
       $valor_total_pedido = 0;
       $produtos_pedido = array();
 
@@ -49,10 +65,12 @@ class PedidoDeVendaController extends Controller
 
         $preco = $produto->preco;
         $desconto = $request['percentual_de_desconto'][$index];
-        $quantidade = $request['quantidade'][$index] ? $request['quantidade'][$index] : 1;
+        $desconto = is_null($desconto) ? 0 : $desconto;
+        $quantidade = $request['quantidade'][$index];
+        $quantidade = is_null($quantidade) ? 1 : $quantidade;
 
         $valor_total = ($preco * $quantidade);
-        if(isset($desconto) and ($desconto > 0)){
+        if($desconto > 0){
           $valor_total_desconto = (($valor_total * $desconto) / 100);
           $valor_total = $valor_total - $valor_total_desconto;
         }else{
@@ -71,9 +89,7 @@ class PedidoDeVendaController extends Controller
           $valor_total_pedido += $valor_total;
       }
 
-      // var_dump($produtos_pedido); die;
-
-      $id = 25;
+      $id = (PedidoDeVenda::all()->last()->id + 1); // Force autoincrement
       $emissao = date('Y-m-d');
       $total = $valor_total_pedido;
       $cliente = $request['pessoa'];
@@ -118,9 +134,32 @@ class PedidoDeVendaController extends Controller
      * Show the specified resource.
      * @return Response
      */
-    public function show()
+    public function show($id)
     {
-        return view('pedidodevenda::show');
+        setlocale(LC_MONETARY, 'pt_BR');
+        
+        $pedido = PedidoDeVenda::where('numero', $id)
+          ->join('pessoas', 'cliente', '=', 'pessoas.id')
+          ->select('pedido_de_venda.numero', 'pedido_de_venda.emissao', 'pedido_de_venda.total', 'pessoas.nome')
+          ->first();
+
+        $produtos = ItemPedido::where('numero_id', $id)
+          ->join('produtos', 'produto', '=', 'produtos.id')
+          ->select('produtos.nome', 'item_pedido.total', 'item_pedido.preco_unitario', 'item_pedido.quantidade', 'item_pedido.percentual_de_desconto', 'produtos.id')
+          ->get();
+        $emissao = \Carbon\Carbon::parse($pedido->emissao)->format('d/m/Y');
+
+        //$total = money_format('%i', $pedido->total);
+        //$total = "R$ ".(str_replace('.', ',', $total));
+        $total = $pedido->total;
+        
+        $pedido_view = array(
+          'cliente' => $pedido->nome,
+          'total' => $total,
+          'emissao' => $emissao,
+          'produtos' => $produtos,
+        );
+        return response()->json($pedido_view);
     }
 
     /**
@@ -145,7 +184,23 @@ class PedidoDeVendaController extends Controller
      * Remove the specified resource from storage.
      * @return Response
      */
-    public function destroy()
+    public function destroy($id)
     {
+      $pedido = PedidoDeVenda::where('numero', $id)->first();
+      // $pedido->produtos->delete();
+
+      
+
+      if($pedido){
+
+        foreach ($pedido->produtos as $key => $produto) {
+          $produto->delete();
+        }
+
+        
+        return response()->json($pedido->delete());
+      }else{
+
+      }
     }
 }
