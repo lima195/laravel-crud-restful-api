@@ -4,36 +4,92 @@ $(document).ready(function() {
 
 });
 
-function BuscaPedidos(){
+function getRegistros(type){
+
+  if(!type){
+    M.toast({html: 'Tipo (Pedido, Pessoa ou Produto não identificado'});
+  }
+
+  let url = "";
+  let element_populate = "";
+
+  if(type == "pedidoDeVenda"){
+    url = 'http://lima/pedidodevenda/api/pedidos/';
+    element_populate = '#populate-pedidos';
+  }else if(type == "pessoa"){
+    url = 'http://lima/pessoa/api/pessoas/';
+    element_populate = '#populate-pessoas';
+  }else if(type == "produto"){
+    url = 'http://lima/produto/api/produtos/';
+    element_populate = '#populate-produtos';
+  }
+
   $.ajax({
    type: 'GET',
-   url: 'http://lima/pedidodevenda/api/pedidos/',
+   url: url,
    dataType:'json',
    data: {
     params: null,
   },
-  success: function(data){
-    let Html = ''; 
+    success: function(data){
+      let Html = ''; 
 
-    for(let i = 0; i < data.length; i++){
-      let id = data[i].numero;
-      console.log(id);
-      Html += '<tr id="pedidoDeVenda_'+id+'">';
-      Html +=   '<td>'+data[i].numero+'</td>';
-      Html +=   '<td>'+data[i].nome+'</td>';
-      Html +=   '<td>'+data[i].emissao+'</td>';
-      Html +=   '<td>'+numberToCurrency(data[i].total)+'</td>';
-      Html +=   '<td>'+ '<a href="pedido.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
+      if(type == "pedidoDeVenda"){
+
+        for(let i = 0; i < data.length; i++){
+          let id = data[i].numero;
+          console.log(id);
+          Html += '<tr id="pedidoDeVenda_'+id+'">';
+          Html +=   '<td>'+data[i].numero+'</td>';
+          Html +=   '<td>'+data[i].nome+'</td>';
+          Html +=   '<td>'+data[i].emissao+'</td>';
+          Html +=   '<td>'+numberToCurrency(data[i].total)+'</td>';
+          Html +=   '<td>'+ '<a href="pedido.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
                             //'<a class="waves-effect waves-light btn-small">Editar</a> '+
                             '<a data-type="pedidoDeVenda" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
                             '</td>';
                             Html += '</tr>';
-                          }
+        }
 
-                          $('#populate-pedidos').html(Html);
-                          console.log(data);
-                        }
-                      });
+      }else if(type == "pessoa"){
+
+        for(let i = 0; i < data.length; i++){
+          let id = data[i].numero;
+          console.log(id);
+          Html += '<tr id="pessoa_'+id+'">';
+          Html +=   '<td>'+data[i].nome+'</td>';
+          Html +=   '<td>'+data[i].cpf+'</td>';
+          Html +=   '<td>'+data[i].nascimento+'</td>';
+          Html +=   '<td>'+ '<a href="pessoa.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
+                            '<a href="pessoas-form.php?id='+id+'" class="waves-effect waves-light btn-small">Editar</a> '+
+                            '<a data-type="pessoa" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
+                            '</td>';
+                            Html += '</tr>';
+        }
+
+      }else if(type == "produto"){
+
+        for(let i = 0; i < data.length; i++){
+          let id = data[i].numero;
+          console.log(id);
+          Html += '<tr id="produto_'+id+'">';
+          Html +=   '<td>'+data[i].numero+'</td>';
+          Html +=   '<td>'+data[i].nome+'</td>';
+          Html +=   '<td>'+data[i].emissao+'</td>';
+          Html +=   '<td>'+numberToCurrency(data[i].total)+'</td>';
+          Html +=   '<td>'+ '<a href="produto.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
+                            '<a href="produtos-form.php?id='+id+'" class="waves-effect waves-light btn-small">Editar</a> '+
+                            '<a data-type="produto" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
+                            '</td>';
+                            Html += '</tr>';
+        }
+
+      }
+
+      $(element_populate).html(Html);
+      console.log(data);
+    }
+  });
 }
 
 function destroyThis(element){
@@ -76,39 +132,45 @@ function destroyThis(element){
   }
 
   $.ajax({
-      type: 'DELETE',
-      url: url,
-      dataType:'json',
-      data: {
-        params: null,
-      },
-      success: function(data){
-        console.log(data);
-        $(element_delete).html("");
-        M.toast({html: msg});
+    type: 'DELETE',
+    url: url,
+    dataType:'json',
+    data: {
+      params: null,
+    },
+    success: function(data){
+      console.log(data);
+      $(element_delete).html("");
+      M.toast({html: msg});
 
-        if(redirect){
-          M.toast({html: "Redirecionando..."});
-          setTimeout(function(){ window.location.replace(redirect); }, 3000);
-        }
+      if(redirect){
+        M.toast({html: "Redirecionando..."});
+        setTimeout(function(){ window.location.replace(redirect ); }, 3000);
       }
-    });
+    }
+  });
 }
 
-function numberToCurrency(value){
-  value = value.toFixed(2).split('.');
-  value[0] = "R$ " + value[0].split(/(?=(?:...)*$)/).join('.');
-  return value.join(',');
-}
+function getRegistro(id = null, type){
 
-function BuscaPedido(id = null){
   if(id == null){
-    $('.pedido').html("<h2>Não foi encontrado o pedido</h2>")
+    $('.pedido').html("<h4>Não foi encontrado o pedido</h4>")
+  }
+
+  let url = "";
+  let element_populate = "";
+
+  if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
+    url = 'http://lima/pedidodevenda/api/pedidos/'+id;
+  }else if(type == 'pessoaView' | type == 'pessoa'){
+    url = 'http://lima/pessoa/api/pessoas/'+id;
+  }else if(type == 'produtoView' | type == 'produto'){
+    url = 'http://lima/produto/api/produtos/'+id;
   }
 
   $.ajax({
    type: 'GET',
-   url: 'http://lima/pedidodevenda/api/pedidos/'+id,
+   url: url,
    dataType:'json',
    data: {
     params: null,
@@ -117,6 +179,8 @@ function BuscaPedido(id = null){
 
     console.log(data);
     let Html = '';
+
+      if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
         //
         for(let i = 0; i < data.produtos.length; i++){
           Html += '<tr>';
@@ -141,33 +205,47 @@ function BuscaPedido(id = null){
         $('#populate-pedido-cliente').html('<span>Cliente: </span>'+data.cliente);
         $('#populate-pedido-total').html('<span>Total: </span>'+numberToCurrency(data.total));
         $('#populate-pedido-emissao').html('<span>Emissão: </span>'+data.emissao);
-        console.log(data);
+
+      }else if(type == 'pessoaView' | type == 'pessoa'){
+        
+        $('#populate-pessoa-nome').html('<span>Pessoa: </span>'+data.nome);
+        $('#populate-pessoa-cpf').html('<span>CPF: </span>'+data.cpf);
+        $('#populate-pessoa-nascimento').html('<span>Nascimento: </span>'+data.nascimento);
+        //$('#populate-pessoa-pedidos').html(Html);
+
+      }else if(type == 'produtoView' | type == 'produto'){
+        
+        $('#populate-produto').html(Html);
+        $('#populate-produto-codigo').html('<span>Código: </span>'+data.codigo);
+        $('#populate-produto-nome').html('<span>Nome: </span>'+numberToCurrency(data.nome));
+        $('#populate-produto-preco').html('<span>Preço: </span>'+numberToCurrency(data.preco));
+
       }
-    });
+    }
+  });
 }
 
 function BuscaClientes(){
   $.ajax({
-   type: 'GET',
-   url: 'http://lima/pessoa/api/pessoas/',
-   dataType:'json',
-   data: {
+    type: 'GET',
+    url: 'http://lima/pessoa/api/pessoas/',
+    dataType:'json',
+    data: {
     params: null,
   },
   success: function(data){
 
-    let Html = '';
+  let Html = '';
 
-    for(let i = 0; i < data.length; i++){
-      Html +=   '<option value="'+data[i].id+'">'+data[i].nome+'</option>';
-    }
+  for(let i = 0; i < data.length; i++){
+    Html +=   '<option value="'+data[i].id+'">'+data[i].nome+'</option>';
+  }
 
-    $('#populate-pessoas').html(Html);
+  $('#populate-pessoas').html(Html);
     $('select').formSelect();
     console.log(data);
-
-  }
-});
+    }
+  });
 }
 
 function BuscaProdutos(){
@@ -195,26 +273,22 @@ function BuscaProdutos(){
 
 $("#pedido_de_venda").submit(function(e) {
 
+  let url = "http://lima/pedidodevenda/api/pedidos"; // the script where you handle the form input.
+  let data =  $("#pedido_de_venda").serialize();
+  console.log(data);
 
-    let url = "http://lima/pedidodevenda/api/pedidos"; // the script where you handle the form input.
-    let data =  $("#pedido_de_venda").serialize();
-    console.log(data);
-
-    $.ajax({
-     type: 'POST',
-     url: url,
-     data: data,
-     success: function(data)
-     {
+  $.ajax({
+    type: 'POST',
+    url: url,
+    data: data,
+    success: function(data)
+    {
       M.toast({html: 'Pedido de Venda Realizado'})
-              // console.log('success');
-               // alert(data); // show response from the php script.
-             }
-           });
-
+    }
+  });
 
     e.preventDefault();
-  });
+});
 
 function cloneThis(){
   let element = $( '.clone_this:first' ).clone().appendTo( '#clone_this' );
@@ -223,4 +297,10 @@ function cloneThis(){
   element.find('input[type="text"]').val("");
   element.find('.select-dropdown.dropdown-trigger').css("border-bottom", "0px");
   $('select').formSelect();
+}
+
+function numberToCurrency(value){
+  value = value.toFixed(2).split('.');
+  value[0] = "R$ " + value[0].split(/(?=(?:...)*$)/).join('.');
+  return value.join(',');
 }

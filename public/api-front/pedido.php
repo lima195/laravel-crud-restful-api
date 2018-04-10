@@ -52,7 +52,7 @@
     <script type="text/javascript" src="app/js/bin/materialize.min.js"></script>
     <script type="text/javascript" src="app/js/application.js"></script>
     <script type="text/javascript">
-      BuscaPedido(<?php echo $_GET['id'] ?>);
+      getRegistro(<?php echo $_GET['id'] ?>, 'pedidoDeVendaView');
     </script>
   </body>
 </html>
