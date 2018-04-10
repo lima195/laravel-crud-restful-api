@@ -1,58 +1,106 @@
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## Rotas
 
-## About Laravel
+Para rodar o projeto, siga os comandos ou execute o install.sh desde que tenha clonado o projeto na pasta '/var/www/', que seu usuário do apache seja 'www-data' e que seu login e senha do mysql seja 'root'
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+> ./install.sh
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+ou
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+	composer install;
+	find /var/www/laravel-crud-restful-api/public/api-front/ -type f -exec sudo chmod 664 {} \;
+	find /var/www/laravel-crud-restful-api/public/api-front/ -type d -exec sudo chmod 775 {} \;
+	cp .env.demo .env;
+	echo "CREATE DATABASE lima" | mysql -u root -proot;
+	php artisan key:generate;
+	php artisan module:migrate;
+	php artisan module:seed;
+	chmod 777 -R storage/;
+	sudo chown `whoami`:www-data . -R;
 
-## Learning Laravel
+Crie um vhost para 'lima':
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+	/etc/apache2/sites-available/laravel.conf
+	sudo ln -s /etc/apache2/sites-available/laravel.conf /etc/apache2/sites-enabled/
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
 
-## Laravel Sponsors
+	<VirtualHost *:80>
+	    ServerAdmin webmaster@localhost
+	    ServerName lima
+	    DocumentRoot /var/www/laravel-crud-restful-api/public
+	    <Directory /var/www/laravel-crud-restful-api/public/>
+	        Options FollowSymlinks Indexes MultiViews
+	        AllowOverride All
+	        Order allow,deny
+	        Allow from localhost
+	        Require all granted
+	    </Directory>
+	    ErrorLog ${APACHE_LOG_DIR}/error.log
+	    CustomLog ${APACHE_LOG_DIR}/access.log combined
+	</VirtualHost>
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+Crie um hosts pra ele:
+	
+	/etc/hosts
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
+	127.0.0.1	lima
 
-## Contributing
+Restarte o apache:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+	sudo service apache2 restart;
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Rotas
 
-## License
+	 Domain | Method    | URI                                     | Name             | Action                                                                 | Middleware   |
+	+--------+-----------+-----------------------------------------+------------------+------------------------------------------------------------------------+--------------+
+	|        | GET|HEAD  | /                                       |                  | Closure                                                                | web          |
+	|        | GET|HEAD  | api/user                                |                  | Closure                                                                | api,auth:api |
+	|        | GET|HEAD  | pedidodevenda                           |                  | Closure                                                                | web          |
+	|        | GET|HEAD  | pedidodevenda/api                       |                  | Closure                                                                | web          |
+	|        | POST      | pedidodevenda/api/pedidos               | pedidos.store    | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@store   | web          |
+	|        | GET|HEAD  | pedidodevenda/api/pedidos               | pedidos.index    | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@index   | web          |
+	|        | GET|HEAD  | pedidodevenda/api/pedidos/create        | pedidos.create   | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@create  | web          |
+	|        | DELETE    | pedidodevenda/api/pedidos/{pedido}      | pedidos.destroy  | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@destroy | web          |
+	|        | PUT|PATCH | pedidodevenda/api/pedidos/{pedido}      | pedidos.update   | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@update  | web          |
+	|        | GET|HEAD  | pedidodevenda/api/pedidos/{pedido}      | pedidos.show     | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@show    | web          |
+	|        | GET|HEAD  | pedidodevenda/api/pedidos/{pedido}/edit | pedidos.edit     | Modules\PedidoDeVenda\Http\Controllers\PedidoDeVendaController@edit    | web          |
+	|        | GET|HEAD  | pessoa                                  |                  | Closure                                                                | web          |
+	|        | GET|HEAD  | pessoa/api                              |                  | Closure                                                                | web          |
+	|        | GET|HEAD  | pessoa/api/pessoas                      | pessoas.index    | Modules\Pessoa\Http\Controllers\PessoaController@index                 | web          |
+	|        | POST      | pessoa/api/pessoas                      | pessoas.store    | Modules\Pessoa\Http\Controllers\PessoaController@store                 | web          |
+	|        | GET|HEAD  | pessoa/api/pessoas/create               | pessoas.create   | Modules\Pessoa\Http\Controllers\PessoaController@create                | web          |
+	|        | GET|HEAD  | pessoa/api/pessoas/{pessoa}             | pessoas.show     | Modules\Pessoa\Http\Controllers\PessoaController@show                  | web          |
+	|        | PUT|PATCH | pessoa/api/pessoas/{pessoa}             | pessoas.update   | Modules\Pessoa\Http\Controllers\PessoaController@update                | web          |
+	|        | DELETE    | pessoa/api/pessoas/{pessoa}             | pessoas.destroy  | Modules\Pessoa\Http\Controllers\PessoaController@destroy               | web          |
+	|        | GET|HEAD  | pessoa/api/pessoas/{pessoa}/edit        | pessoas.edit     | Modules\Pessoa\Http\Controllers\PessoaController@edit                  | web          |
+	|        | GET|HEAD  | produto                                 |                  | Closure                                                                | web          |
+	|        | GET|HEAD  | produto/api                             |                  | Closure                                                                | web          |
+	|        | GET|HEAD  | produto/api/produtos                    | produtos.index   | Modules\Produto\Http\Controllers\ProdutoController@index               | web          |
+	|        | POST      | produto/api/produtos                    | produtos.store   | Modules\Produto\Http\Controllers\ProdutoController@store               | web          |
+	|        | GET|HEAD  | produto/api/produtos/create             | produtos.create  | Modules\Produto\Http\Controllers\ProdutoController@create              | web          |
+	|        | DELETE    | produto/api/produtos/{produto}          | produtos.destroy | Modules\Produto\Http\Controllers\ProdutoController@destroy             | web          |
+	|        | PUT|PATCH | produto/api/produtos/{produto}          | produtos.update  | Modules\Produto\Http\Controllers\ProdutoController@update              | web          |
+	|        | GET|HEAD  | produto/api/produtos/{produto}          | produtos.show    | Modules\Produto\Http\Controllers\ProdutoController@show                | web          |
+	|        | GET|HEAD  | produto/api/produtos/{produto}/edit     | produtos.edit    | Modules\Produto\Http\Controllers\ProdutoController@edit                | web          |			
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## O que faltou no projeto:
+
+	- Validações
+	- Ação de Excluir do Produto e Pessoa
+	- Máscaras no front
+
+## Front
+
+Acesse: 
+
+	Pedidos:
+	http://lima/api-front/pedidos.php
+
+	Pessoas:
+	http://lima/api-front/pessoas.php
+
+	Produtos:
+	http://lima/api-front/produtos.php
+
