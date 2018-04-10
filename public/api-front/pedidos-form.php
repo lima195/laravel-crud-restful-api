@@ -35,7 +35,7 @@
       <h2> Pedidos de Venda - Formulário</h2>
 
       <!-- <a href="pedidos-form.php" class="waves-effect waves-light btn-small" style="float: right;">Adicionar</a> -->
-      <form>
+      <form action="http://lima/pedidodevenda/api/pedidos" method="post">
       <div class="row">
           <div class="col s12">
             <div class="row">
@@ -52,16 +52,21 @@
           <div id="clone" class="clone_this">
             <div class="row">
 
-            <div class="input-field col s5">
+            <div class="input-field col s4">
               <select id="populate-produtos" id="produto" name="produto[]" class="browser-defaults">
                 <option value="" selected>Choose your option</option>
               </select>
               <label>Produto</label>
             </div>
 
-            <div class="input-field col s5">
+            <div class="input-field col s3">
               <input placeholder="%" id="percentual" name="percentual_de_desconto[]" type="number" min="0" max="100" maxlength="3" class="validate">
               <label>Desconto (%)</label>
+            </div>
+
+            <div class="input-field col s3">
+              <input id="quantidade" name="quantidade[]" type="number" min="0" max="100" maxlength="3" class="validate">
+              <label>Quantidade</label>
             </div>
 
             <div class="col s2">

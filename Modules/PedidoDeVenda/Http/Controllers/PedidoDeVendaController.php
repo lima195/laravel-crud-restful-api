@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\PedidoDeVenda\Entities\PedidoDeVenda;
+use Modules\PedidoDeVenda\Entities\ItemPedido;
+use Modules\Produto\Entities\Produto;
 
 class PedidoDeVendaController extends Controller
 {
@@ -36,6 +38,80 @@ class PedidoDeVendaController extends Controller
      */
     public function store(Request $request)
     {
+      $valor_total_pedido = 0;
+      $produtos_pedido = array();
+
+      $request = $request->all();
+
+      foreach ($request['produto'] as $index => $produto_id) {
+        // var_dump($request); die;
+        $produto = Produto::find($produto_id);
+
+        $preco = $produto->preco;
+        $desconto = $request['percentual_de_desconto'][$index];
+        $quantidade = $request['quantidade'][$index] ? $request['quantidade'][$index] : 1;
+
+        $valor_total = ($preco * $quantidade);
+        if(isset($desconto) and ($desconto > 0)){
+          $valor_total_desconto = (($valor_total * $desconto) / 100);
+          $valor_total = $valor_total - $valor_total_desconto;
+        }else{
+          $desconto = 0;
+        }
+
+        $produtos_pedido[$produto_id] = array(
+            'id' => $produto_id,
+            'nome' => $produto->nome,
+            'quantidade' => $quantidade,
+            'desconto' => $desconto,
+            'preco' => $preco,
+            'valor_total' => $valor_total
+          );
+
+          $valor_total_pedido += $valor_total;
+      }
+
+      // var_dump($produtos_pedido); die;
+
+      $id = 25;
+      $emissao = date('Y-m-d');
+      $total = $valor_total_pedido;
+      $cliente = $request['pessoa'];
+
+      $pedido_de_venda = array(
+          'numero' => null,
+          'id' => $id,
+          'cliente' => $cliente,
+          'emissao' => $emissao,
+          'total' => $total,
+        );
+      // var_dump($pedido_de_venda); die;
+      $pedido = new PedidoDeVenda();
+      $pedido->fill($pedido_de_venda);
+      $pedido->save();
+
+      $numero = $pedido->id;
+
+      foreach ($produtos_pedido as $index => $produto) {
+
+        $produto_pedido = array(
+          'id' => null,
+          'produto' => intval($produto['id']),
+          'quantidade' => intval($produto['quantidade']),
+          'preco_unitario' => floatval($produto['preco']),
+          'percentual_de_desconto' => floatval($produto['desconto']),
+          'total' => floatval($produto['valor_total']),
+          'numero_id' => $numero
+        );
+
+        // var_dump($produto_pedido); die;
+
+        $item_pedido = new ItemPedido();
+        $item_pedido->fill($produto_pedido);
+        $item_pedido->save();
+      }
+
+      return response()->json($request);
     }
 
     /**

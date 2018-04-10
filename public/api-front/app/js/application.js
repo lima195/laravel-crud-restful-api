@@ -86,7 +86,7 @@ function cloneThis(){
   let element = $( '.clone_this:first' ).clone().appendTo( '#clone_this' );
   $(this).attr('disabled', true);
   alert(this);
-  console.log(this);
+  console.log(this)
   element.find('input[type="text"]').val("");
   element.find('.select-dropdown.dropdown-trigger').css("border-bottom", "0px");
   $('select').formSelect();
