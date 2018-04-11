@@ -5,6 +5,8 @@ $(document).ready(function() {
 
 });
 
+var domain = 'http://lima';
+
 function getRegistros(type){
 
   if(!type){
@@ -15,13 +17,13 @@ function getRegistros(type){
   let element_populate = "";
 
   if(type == "pedidoDeVenda"){
-    url = 'http://lima/pedidodevenda/api/pedidos/';
+    url = domain+'/pedidodevenda/api/pedidos/';
     element_populate = '#populate-pedidos';
   }else if(type == "pessoa"){
-    url = 'http://lima/pessoa/api/pessoas/';
+    url = domain+'/pessoa/api/pessoas/';
     element_populate = '#populate-pessoas';
   }else if(type == "produto"){
-    url = 'http://lima/produto/api/produtos/';
+    url = domain+'/produto/api/produtos/';
     element_populate = '#populate-produtos';
   }
 
@@ -93,7 +95,6 @@ function getRegistros(type){
 }
 
 function destroyThis(element){
-  console.log(element);
   let type = element.getAttribute('data-type');
   let id = element.getAttribute('data-id');
   let url = "";
@@ -109,21 +110,21 @@ function destroyThis(element){
   }
 
   if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
-    url = 'http://lima/pedidodevenda/api/pedidos/'+id;
+    url = domain+'/pedidodevenda/api/pedidos/'+id;
     element_delete = "#pedidoDeVenda_"+id;
     msg = "Pedido deletado com sucesso";
     if(type == 'pedidoDeVendaView'){
       redirect = "pedidos.php";
     }
   }else if(type == 'pessoaView' | type == 'pessoa'){
-    url = 'http://lima/pessoa/api/pessoas/'+id;
+    url = domain+'/pessoa/api/pessoas/'+id;
     element_delete = "#pessoa_"+id;
     msg = "Pessoa deletada com sucesso";
     if(type == 'pessoaView'){
       redirect = "pessoas.php";
     }
   }else if(type == 'produtoView' | type == 'produto'){
-    url = 'http://lima/produto/api/produtos/'+id;
+    url = domain+'/produto/api/produtos/'+id;
     element_delete = "#produto_"+id;
     msg = "Produto deletado com sucesso";
     if(type == 'produtosView'){
@@ -158,9 +159,9 @@ function populateForm(id, type){
   if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
     // Não edita
   }else if(type == 'pessoaView' | type == 'pessoa'){
-    url = 'http://lima/pessoa/api/pessoas/'+id;
+    url = domain+'/pessoa/api/pessoas/'+id;
   }else if(type == 'produtoView' | type == 'produto'){
-    url = 'http://lima/produto/api/produtos/'+id;
+    url = domain+'/produto/api/produtos/'+id;
   }
 
   $.ajax({
@@ -207,11 +208,11 @@ function getRegistro(id = null, type){
   let element_populate = "";
 
   if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
-    url = 'http://lima/pedidodevenda/api/pedidos/'+id;
+    url = domain+'/pedidodevenda/api/pedidos/'+id;
   }else if(type == 'pessoaView' | type == 'pessoa'){
-    url = 'http://lima/pessoa/api/pessoas/'+id;
+    url = domain+'/pessoa/api/pessoas/'+id;
   }else if(type == 'produtoView' | type == 'produto'){
-    url = 'http://lima/produto/api/produtos/'+id;
+    url = domain+'/produto/api/produtos/'+id;
   }
 
   $.ajax({
@@ -272,7 +273,7 @@ function getRegistro(id = null, type){
 function BuscaClientes(){
   $.ajax({
     type: 'GET',
-    url: 'http://lima/pessoa/api/pessoas/',
+    url: domain+'/pessoa/api/pessoas/',
     dataType:'json',
     data: {
     params: null,
@@ -295,7 +296,7 @@ function BuscaClientes(){
 function BuscaProdutos(){
   $.ajax({
    type: 'GET',
-   url: 'http://lima/produto/api/produtos/',
+   url: domain+'/produto/api/produtos/',
    dataType:'json',
    data: {
     params: null,
@@ -317,7 +318,7 @@ function BuscaProdutos(){
 
 $("#pedido_de_venda").submit(function(e) {
 
-  let url = "http://lima/pedidodevenda/api/pedidos"; // the script where you handle the form input.
+  let url = domain+"/pedidodevenda/api/pedidos"; // the script where you handle the form input.
   let data =  $("#pedido_de_venda").serialize();
   console.log(data);
 
@@ -341,7 +342,7 @@ $("#pedido_de_venda").submit(function(e) {
 
 $("#pessoa").submit(function(e) {
 
-  let url = "http://lima/pessoa/api/pessoas"; // the script where you handle the form input.
+  let url = domain+"/pessoa/api/pessoas"; // the script where you handle the form input.
   let data =  $("#pessoa").serialize();
   console.log(data);
 
@@ -368,7 +369,7 @@ $("#pessoaEdit").submit(function(e) {
 
   let id = $('input[name="id"]').val();
   console.log(id);
-  let url = "http://lima/pessoa/api/pessoas/"+id; // the script where you handle the form input.
+  let url = domain+"/pessoa/api/pessoas/"+id; // the script where you handle the form input.
   let data =  $("#pessoaEdit").serialize();
   console.log(data);
 
@@ -392,7 +393,7 @@ $("#pessoaEdit").submit(function(e) {
 
 $("#produto").submit(function(e) {
 
-  let url = "http://lima/produto/api/produtos"; // the script where you handle the form input.
+  let url = domain+"/produto/api/produtos"; // the script where you handle the form input.
   let data =  $("#produto").serialize();
   console.log(data);
 
@@ -419,7 +420,7 @@ $("#produtoEdit").submit(function(e) {
 
   let id = $('input[name="id"]').val();
   console.log(id);
-  let url = "http://lima/produto/api/produtos/"+id; // the script where you handle the form input.
+  let url = domain+"/produto/api/produtos/"+id; // the script where you handle the form input.
   let data =  $("#produtoEdit").serialize();
   console.log(data);
 
