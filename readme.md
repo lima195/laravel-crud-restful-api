@@ -1,5 +1,8 @@
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
+## Demonstração
+	http://webldna.com.br/api-front/pedidos.php
+
 ## Instalação
 
 Para rodar o projeto, siga os comandos ou execute o install.sh desde que tenha clonado o projeto na pasta '/var/www/', que seu usuário do apache seja 'www-data' e que seu login e senha do mysql seja 'root'
