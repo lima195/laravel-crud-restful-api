@@ -41,7 +41,7 @@ Crie um vhost para 'lima':
 	</VirtualHost>
 
 Crie um hosts pra ele:
-	
+
 	/etc/hosts
 
 	127.0.0.1	lima
@@ -88,12 +88,12 @@ Restarte o apache:
 ## O que faltou no projeto:
 
 	- Validações
-	- Ação de Excluir do Produto e Pessoa
+	- Filtros
 	- Máscaras no front
 
 ## Front
 
-Acesse: 
+Acesse:
 
 	Pedidos:
 	http://lima/api-front/pedidos.php
@@ -103,4 +103,3 @@ Acesse:
 
 	Produtos:
 	http://lima/api-front/produtos.php
-
