@@ -11,7 +11,7 @@
             <!-- <a href="#" class="brand-logo right">Logo</a> -->
             <ul id="nav-mobile" class="left hide-on-med-and-down">
               <li><a href="pedidos.php">Pedidos</a></li>
-              <li><a href="produtos.php">Pessoas</a></li>
+              <li><a href="pessoas.php">Pessoas</a></li>
               <li><a href="produtos.php">Produtos</a></li>
             </ul>
         </div>
