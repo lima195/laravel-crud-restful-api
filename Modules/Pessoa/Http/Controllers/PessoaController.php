@@ -140,7 +140,7 @@ class PessoaController extends Controller
      */
     public function destroy($id)
     {
-        $pessoa = Pessoa::find($id)->first();
+        $pessoa = Pessoa::find($id);
 
         return response()->json($pessoa->delete());
     }

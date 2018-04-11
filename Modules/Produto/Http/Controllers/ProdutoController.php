@@ -135,7 +135,7 @@ class ProdutoController extends Controller
      */
     public function destroy($id)
     {
-        $produto = Produto::find($id)->first();
+        $produto = Produto::find($id);
 
         return response()->json($produto->delete());
     }
