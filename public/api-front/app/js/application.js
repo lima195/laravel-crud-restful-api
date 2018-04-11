@@ -349,9 +349,13 @@ $("#pessoa").submit(function(e) {
     data: data,
     success: function(data)
     {
-      M.toast({html: 'Cadastro de Pessoa Realizado'})
+      console.log(data);
+      M.toast({html: 'Cadastro de Pessoa Realizado'});
       M.toast({html: "Redirecionando..."});
       setTimeout(function(){ window.location.replace('pessoas.php'); }, 3000);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        M.toast({html: 'Já tem uma pessoa com esse nome'});
     }
   });
 

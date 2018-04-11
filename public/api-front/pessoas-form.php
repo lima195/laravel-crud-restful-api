@@ -36,7 +36,7 @@
 
       <!-- <a href="pedidos-form.php" class="waves-effect waves-light btn-small" style="float: right;">Adicionar</a> -->
       <form id="pessoa<?php echo $_GET['id'] ? 'Edit' : ''; ?>">
-      
+
         <div class="row">
 
           <input id="id" name="id" type="hidden"/>
@@ -47,18 +47,18 @@
           </div>
 
           <div class="input-field col s12">
-            <input id="cpf" name="cpf" type="text" maxlength="200" class="validate">
+            <input id="cpf" name="cpf" type="text" class="validate" onKeyUp="MascaraCPF(pessoa<?php echo $_GET['id'] ? 'Edit' : ''; ?>.cpf)" maxlength="14" required>
             <label>CPF</label>
           </div>
 
           <div class="input-field col s12">
-            <input id="nascimento" name="nascimento" type="text" maxlength="200" class="validate">
+            <input id="nascimento" name="nascimento" type="text" class="validate" onKeyPress="MascaraData(pessoa<?php echo $_GET['id'] ? 'Edit' : ''; ?>.nascimento)" maxlength="10" required>
             <label>Nascimento</label>
           </div>
 
       </div>
-      
-      <button class="btn waves-effect waves-light" style="float: right;" type="submit" name="action">Enviar</button>
+
+      <button id="enviar" class="btn waves-effect waves-light" style="float: right;" type="submit" name="action">Enviar</button>
     </form>
 
       <!-- <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a> -->
@@ -67,6 +67,7 @@
     <script src="app/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="app/js/bin/materialize.min.js"></script>
     <script type="text/javascript" src="app/js/application.js"></script>
+    <script type="text/javascript" src="app/js/masks.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         <?php if($_GET['id']){ ?>

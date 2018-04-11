@@ -48,16 +48,25 @@ class PessoaController extends Controller
 
         $request = $request->all();
 
+        list($dia, $mes, $ano) = explode('/', $request['nascimento']);
+        $date = $ano."/".$mes."/".$dia;
+
         $pessoa_save = array(
             'id' => null,
             'nome' => $request['nome'],
             'cpf' => $request['cpf'],
-            'nascimento' => $request['nascimento']
+            'nascimento' => $date
         );
 
         $pessoa = new Pessoa();
         $pessoa->fill($pessoa_save);
-        $pessoa->save();
+        $save = $pessoa->save();
+
+        if(!$save){
+          header('HTTP/1.1 406');
+          header('Content-Type: application/json; charset=UTF-8');
+          die(json_encode(array('message' => 'Já tem uma pessoa com esse nome', 'code' => 1337)));
+        }
 
         return response()->json($pessoa_save);
     }
