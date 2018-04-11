@@ -474,6 +474,7 @@ $("#filtro").submit(function(e) {
   if(type == "pedidoDeVenda"){
     url = domain+'/pedidodevenda/api/pedidos/';
     element_populate = '#populate-pedidos';
+
     params = [{
       numero: $('input[name="numero"]').val(),
       cliente: $('input[name="cliente"]').val(),
@@ -483,6 +484,7 @@ $("#filtro").submit(function(e) {
   }else if(type == "pessoa"){
     url = domain+'/pessoa/api/pessoas/';
     element_populate = '#populate-pessoas';
+
     params = [{
       nome: $('input[name="nome"]').val(),
       cpf: $('input[name="cpf"]').val(),
@@ -491,6 +493,12 @@ $("#filtro").submit(function(e) {
   }else if(type == "produto"){
     url = domain+'/produto/api/produtos/';
     element_populate = '#populate-produtos';
+
+    params = [{
+      codigo: $('input[name="codigo"]').val(),
+      nome: $('input[name="nome"]').val(),
+      preco: $('input[name="preco"]').val()
+    }];
   }
 
   $.ajax({

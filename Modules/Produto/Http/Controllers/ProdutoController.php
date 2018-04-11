@@ -16,11 +16,35 @@ class ProdutoController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produtos = DB::table('produtos')
-        ->whereNull('deleted_at')
-        ->get();
+        if($request->params){
+          $params = $request->all()['params'][0];
+
+          $produtos = DB::table('produtos')
+            ->whereNull('deleted_at');
+
+          if(isset($params['codigo'])){
+            $produtos->where('codigo', '=', $params['codigo']);
+          }
+
+          if(isset($params['nome'])){
+            $produtos->where('nome', '=', $params['nome']);
+          }
+
+          if(isset($params['preco'])){
+            $params['preco'] = (preg_replace('/[^0-9]/', '', $params['preco'])/100);
+            $produtos->where('preco', '=', $params['preco']);
+          }
+
+          $produtos = $produtos->get();
+
+        }else{
+          $produtos = DB::table('produtos')
+            ->whereNull('deleted_at')
+            ->get();
+        }
+
         return response()->json($produtos);
     }
 
