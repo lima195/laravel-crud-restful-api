@@ -21,6 +21,7 @@ class CreatePedidoDeVendaTable extends Migration
             $table->date('emissao');
             $table->double('total', 8, 2);
             $table->foreign('cliente')->references('id')->on('pessoas');
+            $table->softDeletes();
 
 
             // $table->timestamps();

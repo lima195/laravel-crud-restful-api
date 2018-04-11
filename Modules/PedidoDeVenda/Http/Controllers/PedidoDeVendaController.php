@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class PedidoDeVendaController extends Controller
 {
 
-    
+
     /**
      * Display a listing of the resource.
      * @return Response
@@ -23,7 +23,9 @@ class PedidoDeVendaController extends Controller
     {
         $pedidos = DB::table('pedido_de_venda')
             ->join('pessoas', 'cliente', '=', 'pessoas.id')
-            ->select('pessoas.nome as nome', 'pedido_de_venda.numero', 'pedido_de_venda.id as id', 'pedido_de_venda.emissao', 'pedido_de_venda.total')
+            ->select('pessoas.nome as nome', 'pedido_de_venda.numero', 'pedido_de_venda.id as id', 'pedido_de_venda.emissao', 'pedido_de_venda.total', 'pedido_de_venda.deleted_at', 'pessoas.deleted_at')
+            // ->whereNull('pessoas.deleted_at')
+            ->whereNull('pedido_de_venda.deleted_at')
             ->get();
 
         foreach ($pedidos as $key => $pedido) {
@@ -35,7 +37,7 @@ class PedidoDeVendaController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @return Response
+     * @return Response->whereNull('pedido_de_venda.deleted_at')
      */
     public function create()
     {
@@ -133,7 +135,7 @@ class PedidoDeVendaController extends Controller
     public function show($id)
     {
         setlocale(LC_MONETARY, 'pt_BR');
-        
+
         $pedido = PedidoDeVenda::where('numero', $id)
           ->join('pessoas', 'cliente', '=', 'pessoas.id')
           ->select('pedido_de_venda.numero', 'pedido_de_venda.emissao', 'pedido_de_venda.total', 'pessoas.nome')
@@ -148,14 +150,19 @@ class PedidoDeVendaController extends Controller
         //$total = money_format('%i', $pedido->total);
         //$total = "R$ ".(str_replace('.', ',', $total));
         $total = $pedido->total;
-        
+
         $pedido_view = array(
           'cliente' => $pedido->nome,
           'total' => $total,
           'emissao' => $emissao,
           'produtos' => $produtos,
         );
-        return response()->json($pedido_view);
+
+        if($pedido_view){
+          return response()->json($pedido_view);
+        }else{
+          return false;
+        }
     }
 
     /**
@@ -189,7 +196,7 @@ class PedidoDeVendaController extends Controller
         foreach ($pedido->produtos as $key => $produto) {
           $produto->delete();
         }
-        
+
         return response()->json($pedido->delete());
       }
     }

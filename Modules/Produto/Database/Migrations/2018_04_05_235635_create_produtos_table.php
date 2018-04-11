@@ -19,6 +19,7 @@ class CreateProdutosTable extends Migration
             $table->string('codigo')->unique();
             $table->string('nome')->unique();
             $table->double('preco', 8, 2);
+            $table->softDeletes();
 
             // $table->timestamps();
         });

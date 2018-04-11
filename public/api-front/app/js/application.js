@@ -33,7 +33,7 @@ function getRegistros(type){
     params: null,
   },
     success: function(data){
-      let Html = ''; 
+      let Html = '';
 
       if(type == "pedidoDeVenda"){
 
@@ -167,18 +167,18 @@ function populateForm(id, type){
    type: 'GET',
    url: url,
    dataType:'json',
-   
+
   success: function(data){
 
     console.log(data);
     let Html = '';
 
       if(type == 'pedidoDeVendaView' | type == 'pedidoDeVenda'){
-       
+
         // Não edita
 
       }else if(type == 'pessoaView' | type == 'pessoa'){
-        
+
         $('input[name="id"]').val(data.id);
         $('input[name="nome"]').val(data.nome);
         $('input[name="cpf"]').val(data.cpf);
@@ -186,7 +186,7 @@ function populateForm(id, type){
         //$('#populate-pessoa-pedidos').html(Html);
 
       }else if(type == 'produtoView' | type == 'produto'){
-        
+
         $('input[name="id"]').val(data.id);
         $('input[name="codigo"]').val(data.codigo);
         $('input[name="nome"]').val(data.nome);
@@ -219,7 +219,7 @@ function getRegistro(id = null, type){
    type: 'GET',
    url: url,
    dataType:'json',
-   
+
   success: function(data){
 
     console.log(data);
@@ -252,14 +252,14 @@ function getRegistro(id = null, type){
         $('#populate-pedido-emissao').html('<span>Emissão: </span>'+data.emissao);
 
       }else if(type == 'pessoaView' | type == 'pessoa'){
-        
+
         $('#populate-pessoa-nome').html('<span>Pessoa: </span>'+data.nome);
         $('#populate-pessoa-cpf').html('<span>CPF: </span>'+data.cpf);
         $('#populate-pessoa-nascimento').html('<span>Nascimento: </span>'+data.nascimento);
         //$('#populate-pessoa-pedidos').html(Html);
 
       }else if(type == 'produtoView' | type == 'produto'){
-        
+
         $('#populate-produto').html(Html);
         $('#populate-produto-codigo').html('<span>Código: </span>'+data.codigo);
         $('#populate-produto-nome').html('<span>Nome: </span>'+data.nome);

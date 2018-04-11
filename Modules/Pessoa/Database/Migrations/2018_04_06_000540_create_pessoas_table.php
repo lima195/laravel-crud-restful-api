@@ -19,6 +19,7 @@ class CreatePessoasTable extends Migration
             $table->string('nome')->unique();
             $table->string('cpf');
             $table->date('nascimento');
+            $table->softDeletes();
 
             // $table->timestamps();
         });

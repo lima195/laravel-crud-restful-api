@@ -18,7 +18,9 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        $produtos = DB::table('produtos')->get();
+        $produtos = DB::table('produtos')
+        ->whereNull('deleted_at')
+        ->get();
         return response()->json($produtos);
     }
 
@@ -61,7 +63,11 @@ class ProdutoController extends Controller
     public function show($id)
     {
         $produto = Produto::find($id);
-        return response()->json($produto);
+        if($produto){
+          return response()->json($produto);
+        }else{
+          return false;
+        }
     }
 
     /**

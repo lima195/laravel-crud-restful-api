@@ -18,7 +18,9 @@ class PessoaController extends Controller
      */
     public function index()
     {
-        $pessoas = DB::table('pessoas')->get();
+        $pessoas = DB::table('pessoas')
+        ->whereNull('deleted_at')
+        ->get();
 
         foreach ($pessoas as $key => $pessoa) {
           $pessoas[$key]->nascimento = \Carbon\Carbon::parse($pessoa->nascimento)->format('d/m/Y');
@@ -66,21 +68,13 @@ class PessoaController extends Controller
      */
     public function show($id)
     {
-        
         $pessoa = Pessoa::find($id);
-
-        // $produtos = ItemPedido::where('numero_id', $id)
-        //  ->join('produtos', 'produto', '=', 'produtos.id')
-        //   ->select('produtos.nome', 'item_pedido.total', 'item_pedido.preco_unitario', 'item_pedido.quantidade', 'item_pedido.percentual_de_desconto', 'produtos.id')
-        //   ->get();
-        // $emissao = \Carbon\Carbon::parse($pedido->emissao)->format('d/m/Y');
-
-        //$total = money_format('%i', $pedido->total);
-        //$total = "R$ ".(str_replace('.', ',', $total));
-        // $total = $pedido->total;
-        
-        
-        return response()->json($pessoa);
+        if($pessoa){
+          $pessoa->pedidos = $pessoa->first()->pedidos;
+          return response()->json($pessoa);
+        }else{
+          return false;
+        }
     }
 
     /**
