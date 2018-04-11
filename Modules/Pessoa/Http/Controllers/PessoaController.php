@@ -58,14 +58,15 @@ class PessoaController extends Controller
             'nascimento' => $date
         );
 
-        $pessoa = new Pessoa();
-        $pessoa->fill($pessoa_save);
-        $save = $pessoa->save();
-
-        if(!$save){
+        try{
+          $pessoa = new Pessoa();
+          $pessoa->fill($pessoa_save);
+          $save = $pessoa->save();
+        }catch(\Exception $e){
+          $errorCode = $e->errorInfo;
           header('HTTP/1.1 406');
           header('Content-Type: application/json; charset=UTF-8');
-          die(json_encode(array('message' => 'Já tem uma pessoa com esse nome', 'code' => 1337)));
+          die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
         }
 
         return response()->json($pessoa_save);
@@ -79,6 +80,8 @@ class PessoaController extends Controller
     {
         $pessoa = Pessoa::find($id);
         if($pessoa){
+          list($ano, $mes, $dia) = explode('-', $pessoa->nascimento);
+          $pessoa->nascimento = $dia."/".$mes."/".$ano;
           $pessoa->pedidos = $pessoa->first()->pedidos;
           return response()->json($pessoa);
         }else{
@@ -105,9 +108,27 @@ class PessoaController extends Controller
         $request = $request->all();
 
         if($id = $request['id']){
-            $pessoa = Pessoa::find($id);
-            $pessoa->fill($request);
-            $save = $pessoa->save();
+
+            list($dia, $mes, $ano) = explode('/', $request['nascimento']);
+            $date = $ano."/".$mes."/".$dia;
+
+            $pessoa_save = array(
+              'id' => $request['id'],
+              'nome' => $request['nome'],
+              'cpf' => $request['cpf'],
+              'nascimento' => $date
+            );
+
+            try{
+              $pessoa = Pessoa::find($id);
+              $pessoa->fill($pessoa_save);
+              $save = $pessoa->save();
+            }catch(\Exception $e){
+              $errorCode = $e->errorInfo;
+              header('HTTP/1.1 406');
+              header('Content-Type: application/json; charset=UTF-8');
+              die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
+            }
         }
 
         return response()->json($save);

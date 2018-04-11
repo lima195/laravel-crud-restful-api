@@ -65,6 +65,13 @@ class PedidoDeVendaController extends Controller
         $desconto = $request['percentual_de_desconto'][$index];
         $desconto = is_null($desconto) ? 0 : $desconto;
         $quantidade = $request['quantidade'][$index];
+
+        if(is_null($quantidade) or $quantidade == 0){
+          header('HTTP/1.1 406');
+          header('Content-Type: application/json; charset=UTF-8');
+          die(json_encode(array('message' => "A quantidade para o produto (".$produto->nome.") deve ser maior que 0;", 'code' => '2')));
+        }
+
         $quantidade = is_null($quantidade) ? 1 : $quantidade;
 
         $valor_total = ($preco * $quantidade);
@@ -87,7 +94,7 @@ class PedidoDeVendaController extends Controller
           $valor_total_pedido += $valor_total;
       }
 
-      $id = (PedidoDeVenda::all()->last()->id + 1); // Force autoincrement
+      $id = (PedidoDeVenda::withTrashed()->get()->last()->id + 1); // Force autoincrement
       $emissao = date('Y-m-d');
       $total = $valor_total_pedido;
       $cliente = $request['pessoa'];
@@ -99,10 +106,17 @@ class PedidoDeVendaController extends Controller
           'emissao' => $emissao,
           'total' => $total,
         );
-      // var_dump($pedido_de_venda); die;
-      $pedido = new PedidoDeVenda();
-      $pedido->fill($pedido_de_venda);
-      $pedido->save();
+
+      try{
+        $pedido = new PedidoDeVenda();
+        $pedido->fill($pedido_de_venda);
+        $pedido->save();
+      }catch(\Exception $e){
+        $errorCode = $e->errorInfo;
+        header('HTTP/1.1 406');
+        header('Content-Type: application/json; charset=UTF-8');
+        die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
+      }
 
       $numero = $pedido->id;
 
@@ -123,6 +137,17 @@ class PedidoDeVendaController extends Controller
         $item_pedido = new ItemPedido();
         $item_pedido->fill($produto_pedido);
         $item_pedido->save();
+
+        try{
+          $item_pedido = new ItemPedido();
+          $item_pedido->fill($produto_pedido);
+          $item_pedido->save();
+        }catch(\Exception $e){
+          $errorCode = $e->errorInfo;
+          header('HTTP/1.1 406');
+          header('Content-Type: application/json; charset=UTF-8');
+          die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
+        }
       }
 
       return response()->json($request);
@@ -194,7 +219,14 @@ class PedidoDeVendaController extends Controller
       if($pedido){
 
         foreach ($pedido->produtos as $key => $produto) {
-          $produto->delete();
+          try{
+            $produto->delete();
+          }catch(\Exception $e){
+            $errorCode = $e->errorInfo;
+            header('HTTP/1.1 406');
+            header('Content-Type: application/json; charset=UTF-8');
+            die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
+          }
         }
 
         return response()->json($pedido->delete());

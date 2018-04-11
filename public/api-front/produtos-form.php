@@ -36,28 +36,28 @@
 
       <!-- <a href="pedidos-form.php" class="waves-effect waves-light btn-small" style="float: right;">Adicionar</a> -->
       <form id="produto<?php echo $_GET['id'] ? 'Edit' : ''; ?>">
-      
+
         <div class="row">
 
           <input id="id" name="id" type="hidden"/>
 
           <div class="input-field col s12">
-            <input id="codigo" name="codigo" type="text" maxlength="200" class="validate">
+            <input id="codigo" name="codigo" type="text" maxlength="200" class="validate" required>
             <label>Código</label>
           </div>
 
           <div class="input-field col s12">
-            <input id="nome" name="nome" type="text" maxlength="200" class="validate">
+            <input id="nome" name="nome" type="text" maxlength="200" class="validate" required>
             <label>Nome</label>
           </div>
 
           <div class="input-field col s12">
-            <input id="preco" name="preco" type="text" maxlength="200" class="validate">
+            <input id="preco" class="currency" name="preco" type="text" maxlength="200" class="validate" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required>
             <label>Preço</label>
           </div>
 
       </div>
-      
+
       <button class="btn waves-effect waves-light" style="float: right;" type="submit" name="action">Enviar</button>
     </form>
 
@@ -67,11 +67,24 @@
     <script src="app/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="app/js/bin/materialize.min.js"></script>
     <script type="text/javascript" src="app/js/application.js"></script>
+    <script type="text/javascript" src="app/js/masks.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         <?php if($_GET['id']){ ?>
           populateForm(<?php echo $_GET['id'] ?>, 'produtoView');
         <?php } ?>
+
+        $(function() {
+          $('#preco').maskMoney();
+        })
+
+        // let clean_value = $('#preco').val();
+        // clean_value = clean_value.replace("R$ ", "");
+    		// clean_value = clean_value.replace(",", "");
+    		// clean_value = clean_value.replace(/[\[\].]+/g, '');
+    		// clean_value = parseInt(clean_value) / 100;
+        // $('#preco').val(clean_value);
+        // console.log(clean_value);
       });
     </script>
   </body>

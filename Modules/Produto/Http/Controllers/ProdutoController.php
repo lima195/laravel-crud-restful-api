@@ -42,16 +42,26 @@ class ProdutoController extends Controller
     {
         $request = $request->all();
 
+        $preco = (preg_replace('/[^0-9]/', '', $request['preco'])/100);
+
         $produto_save = array(
             'id' => null,
             'codigo' => $request['codigo'],
             'nome' => $request['nome'],
-            'preco' => $request['preco']
+            'preco' => $preco
         );
 
-        $produto = new Produto();
-        $produto->fill($produto_save);
-        $produto->save();
+        try{
+          $produto = new Produto();
+          $produto->fill($produto_save);
+          $save = $produto->save();
+        }catch(\Exception $e){
+          $errorCode = $e->errorInfo;
+
+          header('HTTP/1.1 406');
+          header('Content-Type: application/json; charset=UTF-8');
+          die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
+        }
 
         return response()->json($produto_save);
     }
@@ -89,9 +99,31 @@ class ProdutoController extends Controller
         $request = $request->all();
 
         if($id = $request['id']){
-            $produto = Produto::find($id);
-            $produto->fill($request);
-            $save = $produto->save();
+
+            $preco = (preg_replace('/[^0-9]/', '', $request['preco'])/100);
+
+            $produto_save = array(
+                'id' => $request['id'],
+                'codigo' => $request['codigo'],
+                'nome' => $request['nome'],
+                'preco' => $preco
+            );
+
+            try{
+              $produto = Produto::find($id);
+              $produto->fill($produto_save);
+              $save = $produto->save();
+            }catch(\Exception $e){
+              $errorCode = $e->errorInfo;
+              header('HTTP/1.1 406');
+              header('Content-Type: application/json; charset=UTF-8');
+              die(json_encode(array('message' => $errorCode[2], 'code' => $errorCode[1])));
+            }
+
+        }else{
+          header('HTTP/1.1 406');
+          header('Content-Type: application/json; charset=UTF-8');
+          die(json_encode(array('message' => 'Identificador não encontrado', 'code' => '1')));
         }
 
         return response()->json($save);

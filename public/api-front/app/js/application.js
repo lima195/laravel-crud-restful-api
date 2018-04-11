@@ -190,8 +190,7 @@ function populateForm(id, type){
         $('input[name="id"]').val(data.id);
         $('input[name="codigo"]').val(data.codigo);
         $('input[name="nome"]').val(data.nome);
-        $('input[name="preco"]').val(data.preco);
-
+        $('input[name="preco"]').val(data.preco).trigger('mask.maskMoney');;
       }
     }
   });
@@ -331,6 +330,9 @@ $("#pedido_de_venda").submit(function(e) {
       M.toast({html: 'Pedido de Venda Realizado'})
       M.toast({html: "Redirecionando..."});
       setTimeout(function(){ window.location.replace('pedidos.php' ); }, 3000);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        M.toast({html: XMLHttpRequest.responseJSON.message+" Error: "+ XMLHttpRequest.responseJSON.code});
     }
   });
 
@@ -355,7 +357,7 @@ $("#pessoa").submit(function(e) {
       setTimeout(function(){ window.location.replace('pessoas.php'); }, 3000);
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
-        M.toast({html: 'Já tem uma pessoa com esse nome'});
+        M.toast({html: XMLHttpRequest.responseJSON.message+" Error: "+ XMLHttpRequest.responseJSON.code});
     }
   });
 
@@ -376,9 +378,12 @@ $("#pessoaEdit").submit(function(e) {
     data: data,
     success: function(data)
     {
-      M.toast({html: 'Pessoa atualizada com sucesso'})
+      M.toast({html: 'Pessoa atualizada com sucesso'});
       M.toast({html: "Redirecionando..."});
       setTimeout(function(){ window.location.replace('pessoas.php'); }, 3000);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        M.toast({html: XMLHttpRequest.responseJSON.message+" Error: "+ XMLHttpRequest.responseJSON.code});
     }
   });
 
@@ -397,9 +402,13 @@ $("#produto").submit(function(e) {
     data: data,
     success: function(data)
     {
-      M.toast({html: 'Cadastro de Pessoa Realizado'})
+      console.log(data);
+      M.toast({html: 'Cadastro de Pessoa Realizado'});
       M.toast({html: "Redirecionando..."});
-      setTimeout(function(){ window.location.replace('produtos.php'); }, 3000);
+      // setTimeout(function(){ window.location.replace('produtos.php'); }, 3000);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        M.toast({html: XMLHttpRequest.responseJSON.message+" Error: "+ XMLHttpRequest.responseJSON.code});
     }
   });
 
@@ -423,6 +432,9 @@ $("#produtoEdit").submit(function(e) {
       M.toast({html: 'Pessoa atualizada com sucesso'})
       M.toast({html: "Redirecionando..."});
       setTimeout(function(){ window.location.replace('produtos.php'); }, 3000);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        M.toast({html: XMLHttpRequest.responseJSON.message+" Error: "+ XMLHttpRequest.responseJSON.code});
     }
   });
 

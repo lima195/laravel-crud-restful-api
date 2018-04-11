@@ -42,7 +42,7 @@
           <input id="id" name="id" type="hidden"/>
 
           <div class="input-field col s12">
-            <input id="nome" name="nome" type="text" maxlength="200" class="validate">
+            <input id="nome" name="nome" type="text" maxlength="200" class="validate" required>
             <label>Nome</label>
           </div>
 

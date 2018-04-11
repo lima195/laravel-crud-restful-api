@@ -40,7 +40,7 @@
           <div class="col s12">
             <div class="row">
               <div class="input-field col s12">
-                <select id="populate-pessoas" name="pessoa" class="browser-defaults">
+                <select id="populate-pessoas" name="pessoa" class="browser-defaults" required>
                   <option value="" selected>Choose your option</option>
                 </select>
                 <label>Cliente</label>
@@ -60,12 +60,12 @@
             </div>
 
             <div class="input-field col s3">
-              <input placeholder="%" id="percentual" name="percentual_de_desconto[]" type="number" min="0" max="100" maxlength="3" class="validate">
+              <input placeholder="%" id="percentual" name="percentual_de_desconto[]" type="number" min="0" max="100" maxlength="3" class="validate" required>
               <label>Desconto (%)</label>
             </div>
 
             <div class="input-field col s3">
-              <input id="quantidade" name="quantidade[]" type="number" min="0" max="100" maxlength="3" class="validate">
+              <input id="quantidade" name="quantidade[]" type="number" min="0" max="100" maxlength="3" class="validate" required>
               <label>Quantidade</label>
             </div>
 
