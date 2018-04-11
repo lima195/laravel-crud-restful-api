@@ -87,9 +87,7 @@ Restarte o apache:
 
 ## O que faltou no projeto:
 
-	- Validações
 	- Filtros
-	- Máscaras no front
 
 ## Front
 
