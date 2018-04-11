@@ -85,11 +85,12 @@ Restarte o apache:
 	|        | GET|HEAD  | produto/api/produtos/{produto}          | produtos.show    | Modules\Produto\Http\Controllers\ProdutoController@show                | web          |
 	|        | GET|HEAD  | produto/api/produtos/{produto}/edit     | produtos.edit    | Modules\Produto\Http\Controllers\ProdutoController@edit                | web          |			
 
-## O que faltou no projeto:
-
-	- Filtros
-
 ## Front
+
+## Importante
+
+O font foi preparado para rodar com o vhost 'lima', caso não rode com isso altere em:
+https://github.com/lima195/laravel-crud-restful-api/blob/master/public/api-front/app/js/application.js#L8
 
 Acesse:
 
