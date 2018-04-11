@@ -483,6 +483,11 @@ $("#filtro").submit(function(e) {
   }else if(type == "pessoa"){
     url = domain+'/pessoa/api/pessoas/';
     element_populate = '#populate-pessoas';
+    params = [{
+      nome: $('input[name="nome"]').val(),
+      cpf: $('input[name="cpf"]').val(),
+      nascimento: $('input[name="nascimento"]').val()
+    }];
   }else if(type == "produto"){
     url = domain+'/produto/api/produtos/';
     element_populate = '#populate-produtos';
@@ -560,4 +565,5 @@ $("#filtro").submit(function(e) {
 
 function showFiltro(){
   $('#filtro_td').show();
+  $('#botao_filtrar').hide();
 }

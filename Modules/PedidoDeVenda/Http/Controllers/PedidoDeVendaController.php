@@ -36,18 +36,18 @@ class PedidoDeVendaController extends Controller
           }
 
           if(isset($params['cliente'])){
-            $pedidos = $pedidos->where('nome', '=', $params['cliente']);
+            $pedidos->where('nome', '=', $params['cliente']);
           }
 
           if(isset($params['emissao'])){
             list($dia, $mes, $ano) = explode('/', $params['emissao']);
             $params['emissao'] = $ano."-".$mes."-".$dia;
-            $pedidos = $pedidos->whereDate('emissao', '=', $params['emissao']);
+            $pedidos->whereDate('emissao', '=', $params['emissao']);
           }
 
           if(isset($params['total'])){
             $params['total'] = (preg_replace('/[^0-9]/', '', $params['total'])/100);
-            $pedidos = $pedidos->where('total', '=', $params['total']);
+            $pedidos->where('total', '=', $params['total']);
           }
 
 

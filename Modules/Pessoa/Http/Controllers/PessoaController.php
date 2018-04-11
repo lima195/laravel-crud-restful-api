@@ -16,11 +16,36 @@ class PessoaController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pessoas = DB::table('pessoas')
-        ->whereNull('deleted_at')
-        ->get();
+
+        if($request->params){
+          $params = $request->all()['params'][0];
+
+          $pessoas = DB::table('pessoas')
+            ->whereNull('deleted_at');
+
+          if(isset($params['nome'])){
+            $pessoas->where('nome', '=', $params['nome']);
+          }
+
+          if(isset($params['cpf'])){
+            $pessoas->where('cpf', '=', $params['cpf']);
+          }
+
+          if(isset($params['nascimento'])){
+            list($dia, $mes, $ano) = explode('/', $params['nascimento']);
+            $params['nascimento'] = $ano."-".$mes."-".$dia;
+            $pessoas->whereDate('nascimento', '=', $params['nascimento']);
+          }
+
+          $pessoas = $pessoas->get();
+
+        }else{
+          $pessoas = DB::table('pessoas')
+            ->whereNull('deleted_at')
+            ->get();
+        }
 
         foreach ($pessoas as $key => $pessoa) {
           $pessoas[$key]->nascimento = \Carbon\Carbon::parse($pessoa->nascimento)->format('d/m/Y');

@@ -23,7 +23,7 @@
       <h2> Pedidos de Venda </h2>
 
       <a href="pedidos-form.php" class="waves-effect waves-light btn-small" style="float: right;">Adicionar</a>
-      <a class="waves-effect waves-light btn-small" onclick="showFiltro()" style="float: right; margin-left: 10px; margin-right: 10px;">Filtrar</a>
+      <a id="botao_filtrar" class="waves-effect waves-light btn-small" onclick="showFiltro()" style="float: right; margin-left: 10px; margin-right: 10px;">Filtrar</a>
 
       <table>
         <thead>
