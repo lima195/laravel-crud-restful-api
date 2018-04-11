@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PedidoDeVenda extends Model
 {
     use SoftDeletes;
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'emissao'];
     protected $table = 'pedido_de_venda';
     protected $guarded = ['id'];
-    protected $fillable = ['id', 'cliente', 'numero', 'emissao', 'total'];
+    protected $fillable = ['id', 'cliente', 'numero', 'total'];
     public $timestamps = false;
 
     public function cliente()

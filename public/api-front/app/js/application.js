@@ -253,7 +253,7 @@ function getRegistro(id = null, type){
 
       }else if(type == 'pessoaView' | type == 'pessoa'){
 
-        $('#populate-pessoa-nome').html('<span>Pessoa: </span>'+data.nome);
+        $('#populate-pessoa-nome').html('<spanpedidoDeVenda>Pessoa: </span>'+data.nome);
         $('#populate-pessoa-cpf').html('<span>CPF: </span>'+data.cpf);
         $('#populate-pessoa-nascimento').html('<span>Nascimento: </span>'+data.nascimento);
         //$('#populate-pessoa-pedidos').html(Html);
@@ -455,4 +455,109 @@ function numberToCurrency(value){
   value = value.toFixed(2).split('.');
   value[0] = "R$ " + value[0].split(/(?=(?:...)*$)/).join('.');
   return value.join(',');
+}
+
+$("#filtro").submit(function(e) {
+
+  let type = this.getAttribute('data-type');
+
+  if(!type){
+    M.toast({html: 'Tipo (Pedido, Pessoa ou Produto não identificado'});
+  }
+
+  let url = "";
+  let element_populate = "";
+  let params = null;
+
+  // console.log(params);
+
+  if(type == "pedidoDeVenda"){
+    url = domain+'/pedidodevenda/api/pedidos/';
+    element_populate = '#populate-pedidos';
+    params = [{
+      numero: $('input[name="numero"]').val(),
+      cliente: $('input[name="cliente"]').val(),
+      emissao: $('input[name="emissao"]').val(),
+      total: $('input[name="total"]').val()
+    }];
+  }else if(type == "pessoa"){
+    url = domain+'/pessoa/api/pessoas/';
+    element_populate = '#populate-pessoas';
+  }else if(type == "produto"){
+    url = domain+'/produto/api/produtos/';
+    element_populate = '#populate-produtos';
+  }
+
+  $.ajax({
+   type: 'GET',
+   url: url,
+   dataType:'json',
+   data: {
+    params: params,
+  },
+    success: function(data){
+      console.log(data);
+      let Html = '';
+
+      if(type == "pedidoDeVenda"){
+
+        for(let i = 0; i < data.length; i++){
+          let id = data[i].numero;
+          console.log(id);
+          Html += '<tr id="pedidoDeVenda_'+id+'">';
+          Html +=   '<td>'+data[i].numero+'</td>';
+          Html +=   '<td>'+data[i].nome+'</td>';
+          Html +=   '<td>'+data[i].emissao+'</td>';
+          Html +=   '<td>'+numberToCurrency(data[i].total)+'</td>';
+          Html +=   '<td>'+ '<a href="pedido.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
+                            //'<a class="waves-effect waves-light btn-small">Editar</a> '+
+                            '<a data-type="pedidoDeVenda" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
+                            '</td>';
+                            Html += '</tr>';
+        }
+
+      }else if(type == "pessoa"){
+
+        for(let i = 0; i < data.length; i++){
+          let id = data[i].id;
+          console.log(id);
+          Html += '<tr id="pessoa_'+id+'">';
+          Html +=   '<td>'+data[i].nome+'</td>';
+          Html +=   '<td>'+data[i].cpf+'</td>';
+          Html +=   '<td>'+data[i].nascimento+'</td>';
+          Html +=   '<td>'+ '<a href="pessoa.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
+                            '<a href="pessoas-form.php?id='+id+'" class="waves-effect waves-light btn-small">Editar</a> '+
+                            '<a data-type="pessoa" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
+                            '</td>';
+                            Html += '</tr>';
+        }
+
+      }else if(type == "produto"){
+
+        for(let i = 0; i < data.length; i++){
+          let id = data[i].id;
+          console.log(id);
+          Html += '<tr id="produto_'+id+'">';
+          Html +=   '<td>'+data[i].codigo+'</td>';
+          Html +=   '<td>'+data[i].nome+'</td>';
+          Html +=   '<td>'+numberToCurrency(data[i].preco)+'</td>';
+          Html +=   '<td>'+ '<a href="produto.php?id='+id+'" class="waves-effect waves-light btn-small">Ver</a> '+
+                            '<a href="produtos-form.php?id='+id+'" class="waves-effect waves-light btn-small">Editar</a> '+
+                            '<a data-type="produto" data-id="'+id+'" class="waves-effect waves-light btn-small" onClick="destroyThis(this)">Deletar</a> '+
+                            '</td>';
+                            Html += '</tr>';
+        }
+
+      }
+
+      $(element_populate).html(Html);
+      console.log(data);
+    }
+  });
+
+  e.preventDefault();
+});
+
+function showFiltro(){
+  $('#filtro_td').show();
 }

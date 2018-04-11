@@ -52,7 +52,7 @@
           </div>
 
           <div class="input-field col s12">
-            <input id="preco" class="currency" name="preco" type="text" maxlength="200" class="validate" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required>
+            <input id="preco" class="currency" name="preco" type="text" maxlength="20" class="validate" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required>
             <label>Preço</label>
           </div>
 

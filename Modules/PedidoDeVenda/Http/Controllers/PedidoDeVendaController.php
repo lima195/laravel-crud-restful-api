@@ -19,14 +19,47 @@ class PedidoDeVendaController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pedidos = DB::table('pedido_de_venda')
+        if($request->params){
+          $params = $request->all()['params'][0];
+
+          $pedidos = DB::table('pedido_de_venda')
+            ->join('pessoas', 'cliente', '=', 'pessoas.id')
+            ->select('pessoas.nome as nome', 'pedido_de_venda.numero', 'pedido_de_venda.id as id', 'pedido_de_venda.emissao', 'pedido_de_venda.total', 'pedido_de_venda.deleted_at', 'pessoas.deleted_at')
+            ->whereNull('pedido_de_venda.deleted_at');
+
+
+
+          if(isset($params['numero'])){
+            $pedidos->where('numero', '=', $params['numero']);
+          }
+
+          if(isset($params['cliente'])){
+            $pedidos = $pedidos->where('nome', '=', $params['cliente']);
+          }
+
+          if(isset($params['emissao'])){
+            list($dia, $mes, $ano) = explode('/', $params['emissao']);
+            $params['emissao'] = $ano."-".$mes."-".$dia;
+            $pedidos = $pedidos->whereDate('emissao', '=', $params['emissao']);
+          }
+
+          if(isset($params['total'])){
+            $params['total'] = (preg_replace('/[^0-9]/', '', $params['total'])/100);
+            $pedidos = $pedidos->where('total', '=', $params['total']);
+          }
+
+
+          $pedidos = $pedidos->get();
+        }else{
+          $pedidos = DB::table('pedido_de_venda')
             ->join('pessoas', 'cliente', '=', 'pessoas.id')
             ->select('pessoas.nome as nome', 'pedido_de_venda.numero', 'pedido_de_venda.id as id', 'pedido_de_venda.emissao', 'pedido_de_venda.total', 'pedido_de_venda.deleted_at', 'pessoas.deleted_at')
             // ->whereNull('pessoas.deleted_at')
             ->whereNull('pedido_de_venda.deleted_at')
             ->get();
+        }
 
         foreach ($pedidos as $key => $pedido) {
           $pedidos[$key]->emissao = \Carbon\Carbon::parse($pedido->emissao)->format('d/m/Y');
